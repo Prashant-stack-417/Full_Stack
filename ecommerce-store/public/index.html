@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EliteStore - Premium Shopping Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-icon">ES</div>
+            <h1>EliteStore</h1>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="btn btn-secondary" id="show-login-btn">Login</a>
+            <a href="signup.html" class="btn btn-secondary" id="show-signup-btn">Sign Up</a>
+            <button id="logout-btn" class="btn btn-secondary" style="display:none;">Logout</button>
+            <span id="user-email" style="color: var(--gray-700); margin-left: 10px;"></span>
+            <div class="cart-icon" id="cart-icon" title="View Cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Your Ultimate Shopping Destination</h2>
+                <p>Discover the latest trends and exclusive deals at EliteStore.</p>
+            </div>
+        </section>
+
+        <section id="products">
+            <div class="section-header">
+                <div>
+                    <h2>Products</h2>
+                    <p class="subtitle">Explore our wide range of products</p>
+                </div>
+                <div class="search-filter-container">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search products..." />
+                    </div>
+                    <div class="category-filter">
+                        <button class="category-btn active">All</button>
+                        <button class="category-btn">Electronics</button>
+                        <button class="category-btn">Clothing</button>
+                        <button class="category-btn">Books</button>
+                    </div>
+                    <div class="sort-dropdown">
+                        <select>
+                            <option value="default">Sort by</option>
+                            <option value="price-low-high">Price: Low to High</option>
+                            <option value="price-high-low">Price: High to Low</option>
+                            <option value="name-a-z">Name: A to Z</option>
+                            <option value="name-z-a">Name: Z to A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="product-list"></div>
+
+            <!-- Pagination controls -->
+            <div class="pagination-controls">
+                <button id="prev-page" class="btn btn-secondary" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span id="page-info">Page 1</span>
+                <button id="next-page" class="btn btn-secondary">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+        <section id="cart">
+            <h2>Shopping Cart</h2>
+            <div id="cart-items"></div>
+            <div id="cart-total"></div>
+            <button id="checkout-btn" class="btn btn-primary">Checkout</button>
+
+            <!-- Notification section -->
+            <div id="notification" style="display:none;"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section footer-logo">
+                    <div class="logo-icon">ES</div>
+                    <h1>EliteStore</h1>
+                </div>
+                <div class="footer-section footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section footer-links">
+                    <h3>Categories</h3>
+                    <ul>
+                        <li><a href="#">Electronics</a></li>
+                        <li><a href="#">Clothing</a></li>
+                        <li><a href="#">Books</a></li>
+                        <li><a href="#">Home &amp; Kitchen</a></li>
+                        <li><a href="#">Sports &amp; Outdoors</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section footer-newsletter">
+                    <h3>Subscribe to Newsletter</h3>
+                    <p>Get the latest news and special offers directly in your inbox.</p>
+                    <input type="email" placeholder="Enter your email" />
+                    <button>Subscribe</button>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 EliteStore. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            const authToken = localStorage.getItem('authToken');
+            const userEmail = localStorage.getItem('userEmail');
+
+            if (authToken && userEmail) {
+                // User is logged in, update UI
+                document.getElementById('show-login-btn').style.display = 'none';
+                document.getElementById('show-signup-btn').style.display = 'none';
+                document.getElementById('logout-btn').style.display = 'inline-block';
+                document.getElementById('user-email').textContent = userEmail;
+            }
+
+            // Add logout functionality
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                // Clear authentication data
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userEmail');
+
+                // Update UI
+                document.getElementById('show-login-btn').style.display = 'inline-block';
+                document.getElementById('show-signup-btn').style.display = 'inline-block';
+                document.getElementById('logout-btn').style.display = 'none';
+                document.getElementById('user-email').textContent = '';
+
+                // Show notification
+                const notification = document.getElementById('notification');
+                if (notification) {
+                    notification.textContent = 'You have been logged out';
+                    notification.style.display = 'block';
+
+                    // Hide notification after 3 seconds
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 3000);
+                }
+            });
+        });
+    </script>
+    <script>
+        // Scroll to cart section when cart icon is clicked
+        document.getElementById('cart-icon').addEventListener('click', () => {
+            document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Change checkout button to navigate to checkout page without clearing cart
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+            window.location.href = 'checkout.html';
+        });
+    </script>
+
+    <!-- Product Template (hidden) -->
+    <template id="product-template">
+        <div class="product">
+            <div class="product-image">
+                <img src="" alt="Product Image">
+            </div>
+            <div class="product-details">
+                <h3 class="product-title"></h3>
+                <p class="product-price"></p>
+                <p class="product-description"></p>
+                <div class="product-quantity">
+                    <label for="quantity">Qty:</label>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn decrease">-</button>
+                        <input type="number" class="quantity-input" value="1" min="1" max="99">
+                        <button class="quantity-btn increase">+</button>
+                    </div>
+                </div>
+                <button class="add-to-cart-btn">
+                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                </button>
+            </div>
+        </div>
+    </template>
+</body>
+
+</html>
