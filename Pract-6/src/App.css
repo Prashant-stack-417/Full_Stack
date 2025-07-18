@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* Center the app in the page */
+html,
+body {
+  @apply h-full m-0 p-0;
+  background-color: black;
+}
+
+body {
+  @apply flex justify-center items-center min-h-screen bg-gray-100;
+  background-color: black;
+}
+
+#root {
+  @apply w-full flex justify-center items-center p-4;
+  background-color: black;
+}
+
+.Todo {
+  @apply max-w-md mx-auto bg-indigo-950 p-6 rounded-lg shadow-lg text-white;
+}
+
+.Todo h1 {
+  @apply text-2xl font-bold mb-4 text-center;
+}
+
+.Todo .input-container {
+  @apply flex mb-4;
+}
+
+.Todo input {
+  @apply flex-1 p-2 bg-indigo-900 text-white rounded-l-md focus:outline-none;
+}
+
+.Todo .add-button {
+  @apply bg-purple-500 text-white px-4 py-2 rounded-r-md hover:bg-purple-600;
+}
+
+.Todo .task-list {
+  @apply space-y-2;
+}
+
+.Todo .task-item {
+  @apply bg-purple-500 p-3 rounded-md flex justify-between items-center;
+}
+
+.Todo .task-actions button {
+  @apply text-white mx-1;
+}
