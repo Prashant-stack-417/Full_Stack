@@ -10,7 +10,7 @@ const Profile = () => {
           alt="Profile"
           className="profile-image"
         />
-        <h2>John Doe</h2>
+        <h2>Prashant</h2>
         <p>Web Developer</p>
       </div>
     </div>

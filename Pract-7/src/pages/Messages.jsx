@@ -8,14 +8,14 @@ const Messages = () => {
         <div className="message-item">
           <img src="https://via.placeholder.com/40" alt="User" />
           <div className="message-content">
-            <h3>Jane Smith</h3>
+            <h3>Prashant</h3>
             <p>Hello! How are you?</p>
           </div>
         </div>
         <div className="message-item">
           <img src="https://via.placeholder.com/40" alt="User" />
           <div className="message-content">
-            <h3>Mike Johnson</h3>
+            <h3>Rudra</h3>
             <p>Meeting at 3 PM?</p>
           </div>
         </div>
