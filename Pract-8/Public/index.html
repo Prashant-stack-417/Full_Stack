@@ -36,34 +36,62 @@
     </div>
 
     <script>
-        // Get the stored count or start at 0
-        let count = parseInt(localStorage.getItem('repCount')) || 0;
+        let count = 0;
 
-        // Update the display initially
-        document.getElementById('counter').textContent = count;
-
-        function incrementCount() {
-            count++;
-            updateDisplay();
-        }
-
-        function decrementCount() {
-            if (count > 0) {
-                count--;
-                updateDisplay();
+        // Load initial count from server
+        async function loadCount() {
+            try {
+                const response = await fetch('/getCounter');
+                const data = await response.json();
+                count = data.counter;
+                document.getElementById('counter').textContent = count;
+            } catch (error) {
+                console.error('Error loading count:', error);
             }
         }
 
-        function resetCount() {
+        // Update count on server
+        async function updateServerCount(newCount) {
+            try {
+                await fetch('/updateCounter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ counter: newCount })
+                });
+            } catch (error) {
+                console.error('Error updating count:', error);
+            }
+        }
+
+        async function incrementCount() {
+            count++;
+            updateDisplay();
+            await updateServerCount(count);
+        }
+
+        async function decrementCount() {
+            if (count > 0) {
+                count--;
+                updateDisplay();
+                await updateServerCount(count);
+            }
+        }
+
+        async function resetCount() {
             count = 0;
             updateDisplay();
+            await updateServerCount(count);
         }
 
         function updateDisplay() {
             document.getElementById('counter').textContent = count;
-            // Save to localStorage
             localStorage.setItem('repCount', count);
         }
+
+        // Load initial count when page loads
+        loadCount();
     </script>
 </body>
 
