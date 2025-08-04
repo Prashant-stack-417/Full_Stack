@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  background-color: #2c3e50;
+  color: white;
+  width: 250px;
+  position: fixed;
+  left: -250px;
+  height: 100vh;
+  transition: left 0.3s ease;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.sidebar-menu {
+  padding: 20px 0;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.menu-item:hover {
+  background-color: #34495e;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 0;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+  margin-left: 250px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+/* Common page styles */
+.page {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Home page */
+.home-page {
+  text-align: center;
+  color: black;
+}
+
+/* Profile page */
+.profile-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+
+.profile-info {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-image {
+  border-radius: 50%;
+  margin-bottom: 15px;
+}
+
+/* Messages page */
+.messages-list {
+  max-width: 600px;
+  margin: 0 auto;
+  color: black;
+}
+
+.message-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.message-item img {
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.message-content {
+  flex: 1;
+  color: black;
+}
+
+.message-content h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.message-content p {
+  margin: 5px 0 0;
+  color: #666;
+}
