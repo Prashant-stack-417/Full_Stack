@@ -30,7 +30,7 @@ product-site-backend/
 1. Navigate to the project directory:
 
    ```bash
-   cd product-site-backend
+   cd Pract-9
    ```
 
 2. Install dependencies:
