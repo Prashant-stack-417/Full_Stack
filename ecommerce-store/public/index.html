@@ -16,7 +16,19 @@
             <div class="logo-icon">ES</div>
             <h1>EliteStore</h1>
         </div>
-        <div class="nav-right">
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Navigation Overlay for mobile -->
+        <div class="nav-overlay" id="nav-overlay"></div>
+
+        <!-- Navigation Menu -->
+        <div class="nav-right" id="nav-menu">
             <a href="login.html" class="btn btn-secondary" id="show-login-btn">Login</a>
             <a href="signup.html" class="btn btn-secondary" id="show-signup-btn">Sign Up</a>
             <button id="logout-btn" class="btn btn-secondary" style="display:none;">Logout</button>
@@ -79,11 +91,15 @@
         </section>
         <section id="cart">
             <h2>Shopping Cart</h2>
-            <div id="cart-items"></div>
+            <div id="cart-items">
+                <div class="empty-cart" id="empty-cart-message">
+                    <i class="fas fa-shopping-cart"></i>
+                    <p>Your cart is empty</p>
+                    <p>Start shopping to add items to your cart!</p>
+                </div>
+            </div>
             <div id="cart-total"></div>
-            <button id="checkout-btn" class="btn btn-primary">Checkout</button>
-
-            <!-- Notification section -->
+            <button id="checkout-btn" class="btn btn-primary" style="display: none;">Checkout</button>
             <div id="notification" style="display:none;"></div>
         </section>
     </main>

@@ -63,91 +63,17 @@
 
             <button type="submit" class="btn btn-primary" id="signup-submit">
                 <i class="fas fa-user-plus"></i>
-                Sign Up
+                Create Account
             </button>
         </form>
 
-        <div class="auth-footer">
-            <p>Already have an account? <a href="login.html" class="auth-link">Sign in here</a></p>
+        <div class="auth-links">
+            <p>Already have an account?</p>
+            <a href="login.html">Sign In</a>
         </div>
     </div>
 
-    <script>
-        const apiBaseUrl = "http://localhost:5000/api";
-
-        function showError(message) {
-            const errorDiv = document.getElementById("error-message");
-            const successDiv = document.getElementById("success-message");
-            errorDiv.textContent = message;
-            errorDiv.style.display = "block";
-            successDiv.style.display = "none";
-        }
-
-        function showSuccess(message) {
-            const errorDiv = document.getElementById("error-message");
-            const successDiv = document.getElementById("success-message");
-            successDiv.textContent = message;
-            successDiv.style.display = "block";
-            errorDiv.style.display = "none";
-        }
-
-        function hideMessages() {
-            document.getElementById("error-message").style.display = "none";
-            document.getElementById("success-message").style.display = "none";
-        }
-
-        async function registerUser(e) {
-            e.preventDefault();
-
-            const name = document.getElementById("signup-name").value;
-            const email = document.getElementById("signup-email").value;
-            const password = document.getElementById("signup-password").value;
-            const confirmPassword = document.getElementById("signup-confirm").value;
-            const submitBtn = document.getElementById("signup-submit");
-
-            if (!name || !email || !password || !confirmPassword) {
-                showError("Please fill in all fields");
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showError("Passwords do not match");
-                return;
-            }
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing Up...';
-            hideMessages();
-
-            try {
-                const response = await fetch(`${apiBaseUrl}/auth/register`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name, email, password }),
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    localStorage.setItem("authToken", data.token);
-                    localStorage.setItem("userEmail", email);
-                    showSuccess("Registration successful! Redirecting...");
-                    setTimeout(() => {
-                        window.location.href = "index.html";
-                    }, 1500);
-                } else {
-                    showError(data.message || "Registration failed");
-                }
-            } catch (error) {
-                showError("Network error. Please try again.");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Sign Up';
-            }
-        }
-
-        document.getElementById("signup-form").addEventListener("submit", registerUser);
-    </script>
+    <script src="signup.js"></script>
 </body>
 
 </html>

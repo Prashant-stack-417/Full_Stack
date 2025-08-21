@@ -33,13 +33,13 @@ router.get("/", async (req, res) => {
     // Sort options
     let sortOption = {};
     switch (req.query.sort) {
-      case "price-low-high":
+      case "price-low":
         sortOption = { price: 1 };
         break;
-      case "price-high-low":
+      case "price-high":
         sortOption = { price: -1 };
         break;
-      case "name-a-z":
+      case "name":
         sortOption = { name: 1 };
         break;
       case "name-z-a":

@@ -16,7 +16,7 @@
             <i class="fas fa-arrow-left"></i>
             Back to Store
         </a>
-        
+
         <div class="logo-section">
             <div class="logo-icon">ES</div>
             <h1 class="auth-title">Welcome Back</h1>
@@ -39,7 +39,8 @@
                 <label for="login-password" class="form-label">Password</label>
                 <div class="input-container">
                     <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required />
+                    <input type="password" id="login-password" class="form-input" placeholder="Enter your password"
+                        required />
                 </div>
             </div>
 
@@ -80,7 +81,7 @@
 
         async function loginUser(e) {
             e.preventDefault();
-            
+
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
             const submitBtn = document.getElementById("login-submit");

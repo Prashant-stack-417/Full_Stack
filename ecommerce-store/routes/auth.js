@@ -112,4 +112,18 @@ router.get("/check", authenticateToken, (req, res) => {
   });
 });
 
+// Verify token and return user info
+router.get("/verify", authenticateToken, (req, res) => {
+  res.json({
+    success: true,
+    message: "Token verified",
+    user: {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      isAdmin: req.user.isAdmin,
+    },
+  });
+});
+
 module.exports = router;
