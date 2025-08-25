@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Log Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Error Log Viewer</h1>
+            <p>Browse and view server error logs</p>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>📁 Log Files</h3>
+                <div class="refresh-btn">
+                    <button onclick="loadLogFiles()" id="refreshBtn">🔄 Refresh</button>
+                </div>
+                <div id="fileList" class="file-list">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div id="welcomeMessage" class="welcome">
+                    <h2>Welcome to Log Viewer</h2>
+                    <p>Select a log file from the sidebar to view its contents.</p>
+                    <div class="instructions">
+                        <h4>Instructions:</h4>
+                        <ul>
+                            <li>Click on any .txt file in the sidebar to view its content</li>
+                            <li>Use the refresh button to reload the file list</li>
+                            <li>Search within the log content using the search box</li>
+                            <li>Files are displayed with line numbers for easy debugging</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="logContent" class="log-content" style="display: none;">
+                    <div class="log-header">
+                        <h3 id="fileName">Log File</h3>
+                        <div class="file-info">
+                            <span id="fileSize"></span>
+                            <span id="lastModified"></span>
+                            <span id="lineCount"></span>
+                        </div>
+                    </div>
+
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search in log content..."
+                            onkeyup="searchInContent()">
+                        <button onclick="clearSearch()">Clear</button>
+                    </div>
+
+                    <div class="log-display">
+                        <pre id="logText"></pre>
+                    </div>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <h3>❌ Error</h3>
+                    <p id="errorText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Error Log Viewer - Built with Express.js | <span id="status">Ready</span></p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
