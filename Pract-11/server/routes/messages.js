@@ -102,9 +102,9 @@ router.post("/", authenticateToken, async (req, res) => {
     await conversation.save();
 
     // Emit message via Socket.IO for real-time delivery
-    const io = req.app.get('io');
-    const connectedUsers = req.app.get('connectedUsers');
-    
+    const io = req.app.get("io");
+    const connectedUsers = req.app.get("connectedUsers");
+
     if (io && connectedUsers) {
       const recipientSocketId = connectedUsers.get(recipientId);
       if (recipientSocketId) {

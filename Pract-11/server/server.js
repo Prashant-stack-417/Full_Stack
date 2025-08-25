@@ -44,8 +44,8 @@ mongoose
 const connectedUsers = new Map();
 
 // Make io and connectedUsers available to routes
-app.set('io', io);
-app.set('connectedUsers', connectedUsers);
+app.set("io", io);
+app.set("connectedUsers", connectedUsers);
 
 // Routes
 app.use("/api/auth", authRoutes);

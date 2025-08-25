@@ -64,15 +64,15 @@ function ChatWindow({ currentUser, otherUser }) {
 
       // Add message locally
       setMessages((prev) => [...prev, message]);
-      
+
       // Emit via socket for real-time delivery
       socketService.sendMessage({
         to: otherUser._id,
         from: currentUser._id,
         message: message.content,
-        timestamp: message.createdAt
+        timestamp: message.createdAt,
       });
-      
+
       setText("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -161,8 +161,9 @@ function ChatWindow({ currentUser, otherUser }) {
           </div>
         ) : (
           messages.map((m, i) => {
-            const isCurrentUser = (m.sender?._id || m.sender) === currentUser._id;
-            
+            const isCurrentUser =
+              (m.sender?._id || m.sender) === currentUser._id;
+
             return (
               <div
                 key={m._id || i}
@@ -191,9 +192,7 @@ function ChatWindow({ currentUser, otherUser }) {
                     <p className="break-words">{m.content}</p>
                     <div
                       className={`text-xs mt-2 ${
-                        isCurrentUser
-                          ? "text-purple-100"
-                          : "text-slate-400"
+                        isCurrentUser ? "text-purple-100" : "text-slate-400"
                       }`}
                     >
                       {new Date(m.createdAt).toLocaleTimeString([], {
