@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tax Form — Total Income</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <main class="container">
+        <h1>Tax Form — Enter Your Income</h1>
+
+        <form action="/calculate" method="post" novalidate>
+            <div class="field">
+                <label for="source1">Income Source 1</label>
+                <input id="source1" name="source1" type="text" inputmode="decimal" value="<%= values.source1 %>">
+                <% if (errors && errors.source1) { %>
+                    <p class="error">
+                        <%= errors.source1 %>
+                    </p>
+                    <% } %>
+            </div>
+
+            <div class="field">
+                <label for="source2">Income Source 2</label>
+                <input id="source2" name="source2" type="text" inputmode="decimal" value="<%= values.source2 %>">
+                <% if (errors && errors.source2) { %>
+                    <p class="error">
+                        <%= errors.source2 %>
+                    </p>
+                    <% } %>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Calculate Total</button>
+                <!-- Use a link to GET / so clearing reloads the form from the server (resets server-rendered values) -->
+                <a href="/" class="secondary">Clear</a>
+            </div>
+        </form>
+
+        <% if (total !==null && total !==undefined) { %>
+            <section class="result">
+                <h2>Total Income</h2>
+                <p class="big">₹ <%= total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits:
+                        2}) %>
+                </p>
+            </section>
+            <% } %>
+
+                <section class="notes">
+                    <p>We validate and compute the total on the server. Enter numbers (commas allowed). No client-side
+                        calculation is performed.</p>
+                </section>
+    </main>
+</body>
+
+</html>
