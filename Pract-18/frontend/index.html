@@ -15,8 +15,8 @@
 <body>
     <div id="root"></div>
     <script type="text/babel">
-        // API served via Firebase Functions rewrite on the same origin
-        const API_BASE = '/api';
+        // API served locally (start backend with: cd backend && npm start)
+        const API_BASE = 'http://localhost:3003/api';
 
         function App() {
             const [notes, setNotes] = React.useState([]);
