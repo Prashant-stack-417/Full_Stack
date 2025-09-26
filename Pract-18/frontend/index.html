@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>StudyNotes</title>
+    <!-- Bootswatch Cyborg theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/cyborg/bootstrap.min.css" />
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // API served via Firebase Functions rewrite on the same origin
+        const API_BASE = '/api';
+
+        function App() {
+            const [notes, setNotes] = React.useState([]);
+            const [editing, setEditing] = React.useState(null);
+            const [form, setForm] = React.useState({ title: '', body: '', tags: '' });
+
+            React.useEffect(() => { load(); }, []);
+            async function load() {
+                try {
+                    const r = await fetch(API_BASE + '/notes');
+                    if (!r.ok) {
+                        // server returned an HTTP error (404, 500, etc.)
+                        const text = await r.text();
+                        console.error('/api/notes error', r.status, text);
+                        setNotes([]);
+                        return;
+                    }
+                    const ct = r.headers.get('content-type') || '';
+                    if (!ct.includes('application/json')) {
+                        // backend returned HTML (often index.html or an error page)
+                        const text = await r.text();
+                        console.error('/api/notes returned non-JSON response', ct, text.slice(0, 500));
+                        setNotes([]);
+                        return;
+                    }
+                    const data = await r.json();
+                    setNotes(data);
+                } catch (err) {
+                    console.error('Failed to load notes', err);
+                    setNotes([]);
+                }
+            }
+
+            async function save() {
+                const payload = { ...form, tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : [] };
+                if (editing) { await fetch(API_BASE + `/notes/${editing}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); setEditing(null); } else { await fetch(API_BASE + '/notes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); }
+                setForm({ title: '', body: '', tags: '' }); load();
+            }
+
+            async function remove(id) { if (!confirm('Delete?')) return; await fetch(API_BASE + `/notes/${id}`, { method: 'DELETE' }); load(); }
+
+            function edit(n) { setEditing(n._id); setForm({ title: n.title, body: n.body, tags: (n.tags || []).join(', ') }); }
+
+            return <div className="container py-4">
+                <header className="d-flex align-items-center mb-3">
+                    <div>
+                        <h1 className="h4 mb-0">StudyNotes</h1>
+                        <div className="text-muted small">Create and manage quick study notes</div>
+                    </div>
+                </header>
+
+                <div className="row">
+                    <div className="col-lg-6">
+                        <section className="card mb-3 p-3">
+                            <div className="mb-2">
+                                <input className="form-control" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Title" />
+                            </div>
+                            <div className="mb-2">
+                                <textarea className="form-control" value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} placeholder="Body" />
+                            </div>
+                            <div className="mb-2">
+                                <input className="form-control" value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} placeholder="tags,comma,separated" />
+                            </div>
+                            <div className="d-flex gap-2">
+                                <button className="btn btn-primary" onClick={save}>{editing ? 'Update' : 'Add'}</button>
+                                {editing && <button className="btn btn-secondary" onClick={() => { setEditing(null); setForm({ title: '', body: '', tags: '' }) }}>Cancel</button>}
+                            </div>
+                        </section>
+                    </div>
+
+                    <div className="col-lg-6">
+                        <section>
+                            <h5 className="mb-3">Notes</h5>
+                            <div className="row">
+                                {notes.length === 0 && <div className="col-12"><div className="empty">No notes yet</div></div>}
+                                {notes.map(n => (
+                                    <div key={n._id} className="col-md-6 mb-3">
+                                        <div className="card h-100 p-3">
+                                            <h6 className="mb-1">{n.title}</h6>
+                                            <p className="mb-2 small text-muted">{n.body}</p>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <div className="tags small text-muted">{(n.tags || []).join(', ')}</div>
+                                                <div className="actions">
+                                                    <button className="btn btn-sm btn-outline-light text-primary me-1" onClick={() => edit(n)}>Edit</button>
+                                                    <button className="btn btn-sm btn-outline-light text-danger" onClick={() => remove(n._id)}>Delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+
+</html>
