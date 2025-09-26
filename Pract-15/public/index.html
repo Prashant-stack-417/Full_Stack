@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pract-15 — Session Demo</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <h1>Library Portal — Session Demo (Pract-15)</h1>
+
+        <div id="not-logged-in">
+            <form id="login-form">
+                <label for="name">Your name</label>
+                <input id="name" name="name" required />
+                <button type="submit">Log in</button>
+            </form>
+        </div>
+
+        <div id="profile" class="hidden">
+            <h2>Profile</h2>
+            <p><strong>Name:</strong> <span id="p-name"></span></p>
+            <p><strong>Login time:</strong> <span id="p-login"></span></p>
+            <button id="logout">Log out</button>
+        </div>
+
+        <div id="msg" class="muted"></div>
+    </div>
+
+    <script>
+        async function fetchSession() {
+            const r = await fetch('/session');
+            return r.json();
+        }
+
+        async function show() {
+            const { session } = await fetchSession();
+            const notLogged = document.getElementById('not-logged-in');
+            const profile = document.getElementById('profile');
+            const msg = document.getElementById('msg');
+            if (!session) {
+                notLogged.classList.remove('hidden');
+                profile.classList.add('hidden');
+                msg.textContent = 'You are not logged in.';
+            } else {
+                notLogged.classList.add('hidden');
+                profile.classList.remove('hidden');
+                document.getElementById('p-name').textContent = session.name;
+                document.getElementById('p-login').textContent = new Date(session.loginAt).toLocaleString();
+                msg.textContent = 'You are logged in.';
+            }
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            if (!name) return;
+            const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+            if (res.ok) {
+                await show();
+            } else {
+                const body = await res.json();
+                alert(body && body.error ? body.error : 'Login failed');
+            }
+        });
+
+        document.getElementById('logout').addEventListener('click', async () => {
+            await fetch('/logout', { method: 'POST' });
+            await show();
+        });
+
+        show();
+    </script>
+</body>
+
+</html>
