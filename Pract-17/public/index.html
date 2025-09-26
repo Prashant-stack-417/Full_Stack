@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pract-17 — Tuition Admin</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+    <main class="card">
+        <h1>Tuition Admin — Students</h1>
+
+        <section class="form">
+            <h2 id="form-title">Add student</h2>
+            <form id="student-form">
+                <input name="name" placeholder="Full name" required />
+                <input name="age" type="number" placeholder="Age" />
+                <input name="phone" placeholder="Phone" />
+                <input name="course" placeholder="Course" />
+                <button type="submit">Save</button>
+                <button type="button" id="cancel" class="hidden">Cancel</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Students</h2>
+            <ul id="students"></ul>
+        </section>
+    </main>
+
+    <script>
+        const api = {
+            list: () => fetch('/api/students').then(r => r.json()),
+            create: (d) => fetch('/api/students', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) }).then(r => r.json()),
+            update: (id, d) => fetch(`/api/students/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) }).then(r => r.json()),
+            del: (id) => fetch(`/api/students/${id}`, { method: 'DELETE' }).then(r => r.json())
+        };
+
+        let editingId = null;
+
+        const form = document.getElementById('student-form');
+        const studentsEl = document.getElementById('students');
+        const cancelBtn = document.getElementById('cancel');
+        const title = document.getElementById('form-title');
+
+        function renderList(list) {
+            studentsEl.innerHTML = '';
+            if (!list.length) studentsEl.innerHTML = '<li class="muted">No students yet</li>';
+            list.forEach(s => {
+                const li = document.createElement('li');
+                li.innerHTML = `<div class="item"><div><strong>${s.name}</strong> ${s.course ? '— ' + s.course : ''}<br/><span class="muted">Age: ${s.age || '-'} • ${s.phone || '-'}</span></div>
+            <div class="actions"><button data-id="${s._id}" class="edit">Edit</button><button data-id="${s._id}" class="delete">Delete</button></div></div>`;
+                studentsEl.appendChild(li);
+            });
+            document.querySelectorAll('.edit').forEach(b => b.addEventListener('click', onEdit));
+            document.querySelectorAll('.delete').forEach(b => b.addEventListener('click', onDelete));
+        }
+
+        async function load() { const list = await api.list(); renderList(list); }
+
+        function getFormData() { const fd = new FormData(form); return Object.fromEntries(fd.entries()); }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = getFormData();
+            if (editingId) {
+                await api.update(editingId, data);
+                editingId = null;
+                title.textContent = 'Add student';
+                cancelBtn.classList.add('hidden');
+            } else {
+                await api.create(data);
+            }
+            form.reset();
+            await load();
+        });
+
+        cancelBtn.addEventListener('click', () => { editingId = null; form.reset(); title.textContent = 'Add student'; cancelBtn.classList.add('hidden'); });
+
+        async function onEdit(e) {
+            const id = e.currentTarget.dataset.id;
+            const list = await api.list();
+            const s = list.find(x => x._id === id);
+            if (!s) return;
+            form.name.value = s.name || '';
+            form.age.value = s.age || '';
+            form.phone.value = s.phone || '';
+            form.course.value = s.course || '';
+            editingId = id;
+            title.textContent = 'Edit student';
+            cancelBtn.classList.remove('hidden');
+        }
+
+        async function onDelete(e) {
+            if (!confirm('Delete this student?')) return;
+            const id = e.currentTarget.dataset.id;
+            await api.del(id);
+            await load();
+        }
+
+        load();
+    </script>
+</body>
+
+</html>
